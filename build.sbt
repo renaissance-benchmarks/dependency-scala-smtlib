@@ -2,6 +2,14 @@ enablePlugins(GitVersioning)
 
 git.useGitDescribe := true
 
+lazy val writeVersion = taskKey[File]("Writes project version into version.sbt")
+
+writeVersion := {
+  val out = file("version.sbt")
+  IO.write(out, "version := "+'"'+ version.value +'"')
+  out
+}
+
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 scalacOptions ++= {
