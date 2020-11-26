@@ -12,13 +12,7 @@ writeVersion := {
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
-javaOptions in IntegrationTest ++= Seq("-Xss128M")
-
-fork in IntegrationTest := true
-
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4" % "test"
-
-logBuffered in IntegrationTest := false
 
 parallelExecution in Test := true
 
@@ -29,8 +23,6 @@ lazy val commonSettings = Seq(
 )
 
 lazy val root = (project in file(".")).
-  configs(IntegrationTest).
-  settings(commonSettings: _*).
-  settings(Defaults.itSettings: _*)
+  settings(commonSettings: _*)
 
 licenses := Seq("MIT-style" -> url("https://opensource.org/licenses/MIT"))
