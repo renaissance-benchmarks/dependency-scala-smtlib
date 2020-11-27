@@ -10,7 +10,7 @@ writeVersion := {
   out
 }
 
-lazy val root = (project in file("."))
+lazy val scalaSMTLib = (project in file("."))
   .settings(
     name := "scala-smtlib",
     organization := "com.regblanc",
