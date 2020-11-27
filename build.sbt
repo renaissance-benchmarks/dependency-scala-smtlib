@@ -18,5 +18,6 @@ lazy val scalaSMTLib = (project in file("."))
     crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.12", "2.13.4"),
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4" % "test",
     licenses := Seq("MIT-style" -> url("https://opensource.org/licenses/MIT")),
+    exportJars := true,
     Test / parallelExecution := true
   )
