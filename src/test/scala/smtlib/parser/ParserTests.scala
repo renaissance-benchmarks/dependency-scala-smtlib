@@ -11,13 +11,13 @@ import trees.TreesOps
 
 import java.io.StringReader
 
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.TimeLimits
+import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.time.SpanSugar._
 
 import scala.language.implicitConversions
 
-class ParserTests extends FunSuite with TimeLimits {
+class ParserTests extends AnyFunSuite with TimeLimits {
 
   override def suiteName = "SMT-LIB Parser suite"
 
@@ -428,12 +428,14 @@ class ParserTests extends FunSuite with TimeLimits {
       case ExtendedIdentifier(a, b) => 
         assert(a === abc)
         assert(b === ext)
+      case _ => ???
     }
     extId match {
       case SimpleIdentifier(sym) => assert(false)
       case ExtendedIdentifier(a, b) => 
         assert(a === abc)
         assert(b === ext)
+      case _ => ???
     }
 
   }

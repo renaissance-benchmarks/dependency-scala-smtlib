@@ -70,7 +70,7 @@ trait ParserCommon {
    * Make sure the next token has the expected kind and read it
    */
   protected def eat(expected: TokenKind): Token = {
-    val token = nextToken
+    val token = nextToken()
     check(token, expected)
     token
   }
@@ -78,7 +78,7 @@ trait ParserCommon {
    * Make sure the next token is exactly ``expected`` (usually a symbol lit)
    */
   protected def eat(expected: Token): Token = {
-    val token = nextToken
+    val token = nextToken()
     if(token != expected)
       throw new UnexpectedTokenException(token, Seq(expected.kind))
     token
@@ -181,7 +181,7 @@ trait ParserCommon {
 
 
   def parseKeyword: SKeyword = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.Keyword(k) => {
         val keyword = SKeyword(k)
         keyword.setPos(t)
@@ -201,7 +201,7 @@ trait ParserCommon {
       } else {
         val name = parseIdentifier
 
-        val subSorts = parseUntil(Tokens.CParen, eatEnd = false)(parseSort _)
+        val subSorts = parseUntil(Tokens.CParen, eatEnd = false)(() => parseSort)
 
         Sort(name, subSorts.toList).setPos(startPos)
       }
@@ -230,7 +230,7 @@ trait ParserCommon {
     val sym = parseSymbol
 
     val head = parseSExpr
-    val indices = parseUntil(Tokens.CParen, eatEnd = false)(parseSExpr _)
+    val indices = parseUntil(Tokens.CParen, eatEnd = false)(() => parseSExpr)
 
     Identifier(sym, head +: indices)
   }
@@ -245,7 +245,7 @@ trait ParserCommon {
   def parseIdentifier: Identifier = {
     if(getPeekToken.kind == Tokens.OParen) {
       val pos = getPeekToken.getPos
-      parseWithin(Tokens.OParen, Tokens.CParen)(parseUnderscoreIdentifier _).setPos(pos)
+      parseWithin(Tokens.OParen, Tokens.CParen)(() => parseUnderscoreIdentifier).setPos(pos)
     } else {
       val sym = parseSymbol
       Identifier(sym).setPos(sym)
@@ -253,7 +253,7 @@ trait ParserCommon {
   }
 
   def parseSymbol: SSymbol = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.SymbolLit(s) => {
         val symbol = SSymbol(s)
         symbol.setPos(t)
@@ -270,7 +270,7 @@ trait ParserCommon {
    */
 
   def parseString: SString = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.StringLit(s) => {
         val str = SString(s)
         str.setPos(t)
@@ -280,7 +280,7 @@ trait ParserCommon {
   }
 
   def parseNumeral: SNumeral = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.NumeralLit(n) => {
         val num = SNumeral(n)
         num.setPos(t)
@@ -290,7 +290,7 @@ trait ParserCommon {
   }
 
   def parseDecimal: SDecimal = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.DecimalLit(n) => {
         val dec = SDecimal(n)
         dec.setPos(t)
@@ -300,7 +300,7 @@ trait ParserCommon {
   }
 
   def parseHexadecimal: SHexadecimal = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.HexadecimalLit(h) => {
         val hexa = SHexadecimal(h)
         hexa.setPos(t)
@@ -310,7 +310,7 @@ trait ParserCommon {
   }
 
   def parseBinary: SBinary = {
-    nextToken match {
+    nextToken() match {
       case t@Tokens.BinaryLit(b) => {
         val bin = SBinary(b.toList)
         bin.setPos(t)
@@ -319,7 +319,7 @@ trait ParserCommon {
     }
   }
 
-  def parseSList: SList = SList(parseMany(parseSExpr _).toList)
+  def parseSList: SList = SList(parseMany(() => parseSExpr).toList)
 
   /**
     *

@@ -3,7 +3,7 @@ package it
 
 import scala.sys.process._
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import java.io.File
 import java.io.FileReader
@@ -21,7 +21,7 @@ import interpreters._
   *
   * TODO: proper way to display warning when not all tests are run because of not found executables.
   */
-class SmtLibRunnerTests extends FunSuite with TestHelpers {
+class SmtLibRunnerTests extends AnyFunSuite with TestHelpers {
 
   filesInResourceDir("regression/smtlib/solving/all", _.endsWith(".smt2")).foreach(file => {
     if(isZ3Available) {
@@ -72,7 +72,7 @@ class SmtLibRunnerTests extends FunSuite with TestHelpers {
     val lexer = new Lexer(new FileReader(file))
     val parser = new Parser(lexer)
 
-    for(expected <- scala.io.Source.fromFile(want).getLines) {
+    for(expected <- scala.io.Source.fromFile(want).getLines()) {
       val cmd = parser.parseCommand
       assert(cmd !== null)
       val res: String = interpreter.eval(cmd).toString
